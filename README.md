@@ -1,0 +1,2 @@
+# studiolite-scripts
+    Public
