@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Lite Scripts — مكتبة السكربتات</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+<style>
+/* ═══════════════════════════════════════
+   DESIGN SYSTEM — Studio Lite Scripts
+   Theme: Terminal-Noir / Cyber-Minimal
+   ═══════════════════════════════════════ */
+:root {
+  --c-bg:       #070c0b;
+  --c-bg2:      #0c1412;
+  --c-bg3:      #111c1a;
+  --c-card:     #0e1816;
+  --c-card2:    #131f1d;
+  --c-border:   rgba(0,210,165,0.14);
+  --c-border2:  rgba(0,210,165,0.07);
+  --c-teal:     #00d2a5;
+  --c-teal2:    #00b88f;
+  --c-teal-g:   rgba(0,210,165,0.12);
+  --c-teal-g2:  rgba(0,210,165,0.05);
+  --c-text:     #dff2ed;
+  --c-text2:    #7db5ab;
+  --c-text3:    #3d7a71;
+  --c-red:      #ff5f6d;
+  --c-yellow:   #ffd166;
+  --c-blue:     #4fc3f7;
+  --c-star:     #ffc107;
+  --r-sm: 10px; --r-md: 14px; --r-lg: 18px; --r-xl: 24px;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'Tajawal', sans-serif;
+  --shadow: 0 8px 32px rgba(0,0,0,0.5);
+  --glow: 0 0 20px rgba(0,210,165,0.15);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── GRID BG ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(0,210,165,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0,210,165,0.03) 0%, transparent 60%),
+    linear-gradient(rgba(0,210,165,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,210,165,0.03) 1px, transparent 1px);
+  background-size: auto, auto, 44px 44px, 44px 44px;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--c-border); border-radius:4px; }
+::-webkit-scrollbar-thumb:hover { background:var(--c-teal); }
+
+/* ══════════════════════════════════════
+   NAV
+   ══════════════════════════════════════ */
+.nav {
+  position:sticky; top:0; z-index:200;
+  height:58px;
+  background: rgba(7,12,11,0.88);
+  backdrop-filter: blur(20px) saturate(1.5);
+  border-bottom: 1px solid var(--c-border);
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 0 28px;
+}
+.nav-logo {
+  display:flex; align-items:center; gap:10px;
+  font-weight:900; font-size:1.1rem; color:var(--c-teal);
+  text-decoration:none; letter-spacing:-0.3px;
+}
+.nav-logo-icon {
+  width:30px; height:30px; border-radius:8px;
+  background: var(--c-teal-g);
+  border: 1px solid var(--c-border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.85rem;
+  box-shadow: var(--glow);
+  animation: logoBreath 3s ease-in-out infinite;
+}
+@keyframes logoBreath {
+  0%,100%{box-shadow:0 0 10px rgba(0,210,165,0.2)}
+  50%{box-shadow:0 0 22px rgba(0,210,165,0.45)}
+}
+.nav-right { display:flex; align-items:center; gap:8px; }
+
+.nav-btn {
+  height:34px; padding:0 14px;
+  border-radius:var(--r-sm);
+  border: 1px solid var(--c-border);
+  background: var(--c-card);
+  color: var(--c-text2);
+  font-family:var(--sans); font-size:0.82rem; font-weight:600;
+  cursor:pointer;
+  display:flex; align-items:center; gap:6px;
+  transition: all 0.18s;
+}
+.nav-btn:hover { border-color:var(--c-teal); color:var(--c-teal); background:var(--c-teal-g2); }
+.nav-btn.primary { background:var(--c-teal); color:var(--c-bg); border-color:var(--c-teal); font-weight:700; }
+.nav-btn.primary:hover { opacity:0.88; }
+
+/* ══════════════════════════════════════
+   HERO
+   ══════════════════════════════════════ */
+.hero {
+  position:relative; z-index:1;
+  padding: 64px 28px 48px;
+  text-align:center;
+}
+.hero-badge {
+  display:inline-flex; align-items:center; gap:7px;
+  background: var(--c-teal-g);
+  border: 1px solid var(--c-border);
+  border-radius:20px;
+  padding: 5px 16px;
+  font-size:0.75rem; font-weight:700; letter-spacing:1.2px;
+  color:var(--c-teal); text-transform:uppercase;
+  margin-bottom:24px;
+}
+.hero-badge-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--c-teal);
+  animation: blink 1.4s steps(1) infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.hero h1 {
+  font-size: clamp(2rem,5.5vw,3.6rem);
+  font-weight:900; line-height:1.12;
+  letter-spacing:-1px; margin-bottom:16px;
+}
+.hero h1 em {
+  font-style:normal;
+  color:transparent;
+  background: linear-gradient(135deg, var(--c-teal), #00e8c8, var(--c-teal2));
+  -webkit-background-clip:text; background-clip:text;
+}
+.hero-sub {
+  color:var(--c-text2); font-size:1.02rem;
+  max-width:500px; margin:0 auto 36px;
+  line-height:1.75;
+}
+
+/* ── SEARCH ── */
+.search-bar {
+  position:relative; max-width:560px; margin:0 auto;
+}
+.search-bar input {
+  width:100%; height:52px;
+  padding: 0 20px 0 50px;
+  background: var(--c-card);
+  border: 1.5px solid var(--c-border);
+  border-radius:var(--r-lg);
+  color:var(--c-text); font-family:var(--sans); font-size:0.97rem;
+  outline:none;
+  transition: all 0.2s;
+}
+.search-bar input:focus { border-color:var(--c-teal); box-shadow:0 0 0 3px var(--c-teal-g); }
+.search-bar input::placeholder { color:var(--c-text3); }
+.search-bar .s-icon {
+  position:absolute; left:17px; top:50%; transform:translateY(-50%);
+  color:var(--c-text3); font-size:1rem; pointer-events:none;
+  transition: color 0.2s;
+}
+.search-bar input:focus ~ .s-icon { color:var(--c-teal); }
+.search-bar .s-clear {
+  position:absolute; right:14px; top:50%; transform:translateY(-50%);
+  background:none; border:none; color:var(--c-text3);
+  cursor:pointer; font-size:1rem; padding:4px;
+  display:none; border-radius:6px;
+  transition: color 0.15s;
+}
+.search-bar .s-clear:hover { color:var(--c-red); }
+.search-bar.has-value .s-clear { display:block; }
+
+/* ══════════════════════════════════════
+   STATS STRIP
+   ══════════════════════════════════════ */
+.stats-strip {
+  position:relative; z-index:1;
+  display:flex; justify-content:center; gap:0;
+  padding: 0 28px 40px;
+}
+.stat-item {
+  padding: 16px 32px;
+  border: 1px solid var(--c-border2);
+  text-align:center;
+  position:relative;
+}
+.stat-item:first-child { border-radius:var(--r-md) 0 0 var(--r-md); }
+.stat-item:last-child  { border-radius:0 var(--r-md) var(--r-md) 0; }
+.stat-item:not(:first-child) { border-left:none; }
+.stat-item::before {
+  content:'';position:absolute;inset:0;
+  background:var(--c-teal-g2);
+  opacity:0; transition:opacity 0.2s;
+}
+.stat-item:hover::before { opacity:1; }
+.stat-num { font-size:1.8rem; font-weight:900; color:var(--c-teal); font-family:var(--mono); }
+.stat-lbl { font-size:0.73rem; color:var(--c-text3); margin-top:3px; letter-spacing:0.5px; }
+
+/* ══════════════════════════════════════
+   CATEGORIES
+   ══════════════════════════════════════ */
+.cats-section {
+  position:relative; z-index:1;
+  padding: 0 28px 28px;
+  display:flex; align-items:center; gap:8px;
+  overflow-x:auto; scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.cats-section::-webkit-scrollbar { display:none; }
+
+.cat-pill {
+  flex-shrink:0;
+  padding: 7px 18px;
+  border-radius:20px;
+  border: 1.5px solid var(--c-border);
+  background: transparent;
+  color: var(--c-text2);
+  font-family:var(--sans); font-size:0.83rem; font-weight:600;
+  cursor:pointer; white-space:nowrap;
+  display:flex; align-items:center; gap:6px;
+  transition: all 0.18s;
+}
+.cat-pill:hover { border-color:var(--c-teal); color:var(--c-teal); background:var(--c-teal-g2); }
+.cat-pill.active {
+  border-color:var(--c-teal); color:var(--c-bg);
+  background:var(--c-teal); font-weight:700;
+}
+.cat-pill .cat-count {
+  background: rgba(0,0,0,0.2);
+  padding:1px 7px; border-radius:10px;
+  font-size:0.72rem;
+}
+.cat-pill.active .cat-count { background:rgba(0,0,0,0.25); }
+
+/* ══════════════════════════════════════
+   MAIN LAYOUT
+   ══════════════════════════════════════ */
+.layout {
+  position:relative; z-index:1;
+  max-width:1160px; margin:0 auto;
+  padding: 0 28px 100px;
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:20px;
+}
+.list-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:4px;
+}
+.list-title {
+  font-size:0.83rem; font-weight:700; color:var(--c-text2);
+  display:flex; align-items:center; gap:8px;
+  text-transform:uppercase; letter-spacing:0.8px;
+}
+.list-title::before {
+  content:''; width:3px; height:14px; border-radius:2px;
+  background:var(--c-teal); display:block;
+  box-shadow:0 0 8px var(--c-teal);
+}
+.list-meta { font-size:0.78rem; color:var(--c-text3); }
+.list-sort {
+  padding:6px 12px;
+  border-radius:8px; border:1px solid var(--c-border);
+  background:var(--c-card); color:var(--c-text2);
+  font-family:var(--sans); font-size:0.8rem; cursor:pointer;
+  outline:none;
+}
+
+/* ══════════════════════════════════════
+   SCRIPT CARDS
+   ══════════════════════════════════════ */
+.scripts-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px,1fr));
+  gap:14px;
+}
+
+.s-card {
+  background:var(--c-card);
+  border: 1px solid var(--c-border2);
+  border-radius:var(--r-lg);
+  overflow:hidden;
+  cursor:pointer;
+  transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
+  animation: cardIn 0.35s ease both;
+  position:relative;
+}
+.s-card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, transparent, var(--c-teal), transparent);
+  opacity:0; transition:opacity 0.22s;
+}
+@keyframes cardIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.s-card:hover {
+  border-color:var(--c-teal);
+  box-shadow:0 0 28px rgba(0,210,165,0.1), 0 4px 20px rgba(0,0,0,0.3);
+  transform:translateY(-2px);
+}
+.s-card:hover::before { opacity:1; }
+
+.s-card-top { padding:16px 18px 12px; }
+.s-card-row1 { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px; }
+.s-card-name { font-size:0.97rem; font-weight:700; line-height:1.35; color:var(--c-text); }
+.s-card-cat {
+  flex-shrink:0; padding:3px 10px; border-radius:8px;
+  font-size:0.7rem; font-weight:700; letter-spacing:0.3px;
+  background:var(--c-teal-g); color:var(--c-teal);
+  border:1px solid var(--c-border);
+}
+.s-card-desc { font-size:0.83rem; color:var(--c-text2); line-height:1.65; }
+
+/* Rating */
+.s-card-rating { display:flex; align-items:center; gap:4px; margin-top:8px; }
+.stars { color:var(--c-text3); font-size:0.8rem; letter-spacing:1px; }
+.stars .filled { color:var(--c-star); }
+.rating-num { font-size:0.75rem; color:var(--c-text3); }
+
+/* Code preview */
+.s-card-code {
+  margin:0 18px;
+  background:var(--c-bg2);
+  border:1px solid var(--c-border2);
+  border-radius:var(--r-sm);
+  padding:10px 12px;
+  font-family:var(--mono); font-size:0.72rem;
+  color:#88b8b0; line-height:1.55;
+  max-height:70px; overflow:hidden;
+  position:relative;
+}
+.s-card-code::after {
+  content:'';position:absolute;bottom:0;left:0;right:0;height:30px;
+  background:linear-gradient(transparent,var(--c-bg2));
+}
+
+.s-card-foot {
+  padding:10px 18px 14px;
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top:10px;
+}
+.s-card-meta { display:flex; align-items:center; gap:12px; }
+.s-meta-item { font-size:0.73rem; color:var(--c-text3); display:flex; align-items:center; gap:4px; }
+
+.btn-copy-card {
+  height:32px; padding:0 16px;
+  border-radius:8px;
+  border:1.5px solid var(--c-teal);
+  background:var(--c-teal-g);
+  color:var(--c-teal); font-family:var(--sans);
+  font-size:0.8rem; font-weight:700;
+  cursor:pointer; display:flex; align-items:center; gap:5px;
+  transition:all 0.18s;
+}
+.btn-copy-card:hover { background:var(--c-teal); color:var(--c-bg); }
+.btn-copy-card.done { background:var(--c-teal); color:var(--c-bg); }
+
+/* ══════════════════════════════════════
+   EMPTY + SKELETON
+   ══════════════════════════════════════ */
+.empty-state {
+  grid-column:1/-1; text-align:center; padding:70px 20px; color:var(--c-text3);
+}
+.empty-state .empty-icon { font-size:3.5rem; margin-bottom:14px; opacity:0.5; }
+.empty-state p { font-size:0.9rem; }
+
+/* ══════════════════════════════════════
+   MODAL BASE
+   ══════════════════════════════════════ */
+.overlay {
+  display:none; position:fixed; inset:0; z-index:300;
+  background:rgba(0,0,0,0.75);
+  backdrop-filter:blur(8px);
+  align-items:center; justify-content:center;
+  padding:16px;
+}
+.overlay.open { display:flex; }
+
+.modal {
+  background:var(--c-card);
+  border:1px solid var(--c-border);
+  border-radius:var(--r-xl);
+  width:100%; max-width:720px;
+  max-height:88vh;
+  display:flex; flex-direction:column;
+  box-shadow:0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,210,165,0.08);
+  animation:modalPop 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes modalPop { from{opacity:0;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
+
+.modal-head {
+  padding:24px 28px;
+  border-bottom:1px solid var(--c-border2);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.m-head-info h2 { font-size:1.25rem; font-weight:900; margin-bottom:4px; }
+.m-head-info .m-tag { font-size:0.75rem; font-weight:700; color:var(--c-teal); background:var(--c-teal-g); padding:2px 10px; border-radius:6px; }
+
+.btn-close {
+  background:var(--c-bg3); border:1px solid var(--c-border);
+  width:36px; height:36px; border-radius:10px;
+  color:var(--c-text2); cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.15s;
+}
+.btn-close:hover { background:var(--c-red); color:white; border-color:var(--c-red); }
+
+.modal-body {
+  padding:28px; overflow-y:auto; flex:1;
+}
+
+/* ── VIEW MODAL SPECIFIC ── */
+.m-section { margin-bottom:28px; }
+.m-label { font-size:0.75rem; font-weight:800; color:var(--c-text3); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; display:block; }
+.m-desc { font-size:0.95rem; color:var(--c-text2); line-height:1.7; }
+
+.m-code-wrap {
+  position:relative;
+  background:var(--c-bg);
+  border:1px solid var(--c-border);
+  border-radius:var(--r-md);
+  margin-top:12px;
+}
+.m-code-wrap pre { margin:0; padding:20px; font-size:0.85rem; }
+.m-code-wrap code { font-family:var(--mono) !important; background:none !important; }
+
+.m-actions {
+  display:grid; grid-template-columns: 1fr auto; gap:12px; margin-top:16px;
+}
+.btn-copy-big {
+  height:48px; background:var(--c-teal); color:var(--c-bg);
+  border:none; border-radius:var(--r-md);
+  font-family:var(--sans); font-size:0.95rem; font-weight:800;
+  cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px;
+  transition:all 0.2s;
+}
+.btn-copy-big:hover { transform:translateY(-2px); box-shadow:0 10px 20px rgba(0,210,165,0.25); }
+
+/* ── RATING ── */
+.rating-box {
+  background:var(--c-bg3); border:1px solid var(--c-border2);
+  padding:16px; border-radius:var(--r-md);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.rating-stars { display:flex; gap:6px; }
+.rstar { font-size:1.6rem; color:var(--c-text3); cursor:pointer; transition:all 0.15s; }
+.rstar:hover { transform:scale(1.2); color:var(--c-star); }
+.rstar.active { color:var(--c-star); }
+
+/* ── COMMENTS ── */
+.comments-wrap { margin-top:40px; }
+.comments-list { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
+.comment-item {
+  background:var(--c-bg2); border:1px solid var(--c-border2);
+  padding:16px; border-radius:var(--r-md);
+}
+.comment-name { font-size:0.85rem; font-weight:800; color:var(--c-teal); margin-bottom:4px; }
+.comment-text { font-size:0.9rem; color:var(--c-text2); line-height:1.6; }
+.comment-time { font-size:0.7rem; color:var(--c-text3); margin-top:8px; }
+.no-comments { text-align:center; padding:20px; color:var(--c-text3); font-style:italic; font-size:0.85rem; }
+
+.add-comment {
+  background:var(--c-card2); border:1px solid var(--c-border);
+  padding:20px; border-radius:var(--r-lg);
+}
+.comment-inputs { display:grid; gap:12px; }
+.comment-inputs input, .comment-inputs textarea {
+  background:var(--c-bg); border:1px solid var(--c-border2);
+  border-radius:var(--r-sm); padding:12px;
+  color:white; font-family:var(--sans); font-size:0.9rem; outline:none;
+}
+.comment-inputs textarea { resize:none; height:80px; }
+.comment-inputs input:focus, .comment-inputs textarea:focus { border-color:var(--c-teal); }
+.btn-send-comment {
+  height:40px; background:var(--c-teal-g); border:1px solid var(--c-teal);
+  color:var(--c-teal); border-radius:var(--r-sm);
+  font-weight:800; cursor:pointer; margin-top:10px;
+  transition:all 0.18s;
+}
+.btn-send-comment:hover { background:var(--c-teal); color:var(--c-bg); }
+
+/* ══════════════════════════════════════
+   ADMIN MODAL
+   ══════════════════════════════════════ */
+.admin-grid { display:grid; gap:18px; }
+.form-group { display:flex; flex-direction:column; gap:8px; }
+.form-group label { font-size:0.75rem; font-weight:800; color:var(--c-text3); text-transform:uppercase; }
+.form-group input, .form-group select, .form-group textarea {
+  background:var(--c-bg); border:1px solid var(--c-border);
+  border-radius:var(--r-md); padding:12px 16px;
+  color:white; font-family:var(--sans); font-size:0.92rem; outline:none;
+}
+.form-group textarea { font-family:var(--mono); font-size:0.82rem; height:200px; }
+.form-group input:focus, .form-group textarea:focus { border-color:var(--c-teal); box-shadow:0 0 12px var(--c-teal-g); }
+
+.admin-actions { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:10px; }
+.btn-admin {
+  height:48px; border-radius:var(--r-md); border:none;
+  font-family:var(--sans); font-size:0.95rem; font-weight:800; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  transition:all 0.2s;
+}
+.btn-admin.save { background:var(--c-teal); color:var(--c-bg); }
+.btn-admin.cancel { background:var(--c-bg3); color:var(--c-text2); border:1px solid var(--c-border); }
+.btn-admin:hover { transform:translateY(-2px); }
+
+/* ══════════════════════════════════════
+   TOAST
+   ══════════════════════════════════════ */
+.toast {
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(100px);
+  z-index:1000; padding:12px 24px; border-radius:12px;
+  background:var(--c-card); border:1px solid var(--c-teal);
+  color:var(--c-teal); font-weight:700; font-size:0.9rem;
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+  transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  pointer-events:none;
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+.toast.error { border-color:var(--c-red); color:var(--c-red); }
+
+/* ══════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════ */
+.footer {
+  text-align:center; padding:60px 28px;
+  border-top:1px solid var(--c-border2);
+  color:var(--c-text3); font-size:0.85rem;
+}
+.footer p { margin-bottom:12px; }
+.footer-links { display:flex; justify-content:center; gap:20px; }
+.footer-links a { color:var(--c-text2); text-decoration:none; transition:color 0.15s; }
+.footer-links a:hover { color:var(--c-teal); }
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════ */
+@media (max-width: 600px) {
+  .nav { padding: 0 16px; }
+  .layout { padding: 0 16px 80px; }
+  .scripts-grid { grid-template-columns: 1fr; }
+  .hero { padding: 48px 16px 32px; }
+  .stats-strip { flex-direction:column; padding-bottom:20px; }
+  .stat-item { border:1px solid var(--c-border2) !important; border-radius:var(--r-md) !important; margin-bottom:8px; }
+  .m-actions { grid-template-columns: 1fr; }
+  .admin-actions { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">SL</div>
+    Studio Lite
+  </a>
+  <div class="nav-right">
+    <button class="nav-btn" id="themeBtn">🌙 ليلي</button>
+    <button class="nav-btn primary" onclick="openAdmin()">⚙️ الإدارة</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    نظام السكربتات الذكي
+  </div>
+  <h1>مكتبة <em>Studio Lite</em></h1>
+  <p class="hero-sub">أفضل السكربتات المبرمجة بعناية لتطوير ألعابك ومشاريعك في Roblox بسرعة واحترافية.</p>
+  
+  <div class="search-bar" id="searchBar">
+    <span class="s-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="ابحث عن سكربت (مثلاً: طيران، سجن، واجهة)..." oninput="renderScripts()">
+    <button class="s-clear" onclick="clearSearch()">✕</button>
+  </div>
+</header>
+
+<!-- STATS -->
+<section class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-num" id="statScripts">0</div>
+    <div class="stat-lbl">سكربت متاح</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" id="statCopies">0</div>
+    <div class="stat-lbl">عملية نسخ</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" id="statCats">0</div>
+    <div class="stat-lbl">تصنيفات</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" id="statComments">0</div>
+    <div class="stat-lbl">تعليق</div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<div class="cats-section" id="catsSection">
+  <!-- Dynamic -->
+</div>
+
+<!-- MAIN LIST -->
+<main class="layout">
+  <div class="list-header">
+    <div class="list-title">السكربتات المتاحة</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span class="list-meta" id="listMeta">جاري التحميل...</span>
+      <select class="list-sort" id="sortSelect" onchange="renderScripts()">
+        <option value="newest">الأحدث أولاً</option>
+        <option value="copies">الأكثر نسخاً</option>
+        <option value="rating">الأعلى تقييماً</option>
+        <option value="az">ترتيب أبجدي</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="scripts-grid" id="scriptsGrid">
+    <!-- Dynamic -->
+  </div>
+</main>
+
+<!-- VIEW MODAL -->
+<div class="overlay" id="viewOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="m-head-info">
+        <h2 id="mTitle">اسم السكربت</h2>
+        <span class="m-tag" id="mCat">تصنيف</span>
+      </div>
+      <button class="btn-close" onclick="closeOverlay('viewOverlay')">✕</button>
+    </div>
+    <div class="modal-body">
+      
+      <div class="m-section">
+        <span class="m-label">وصف السكربت</span>
+        <p class="m-desc" id="mDesc">هنا يظهر وصف السكربت بالتفصيل وكيفية استخدامه.</p>
+      </div>
+
+      <div class="m-section">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="m-label" style="margin-bottom:0">الكود البرمجي</span>
+          <div style="font-size:0.75rem; color:var(--c-text3); display:flex; gap:12px;">
+            <span>📋 <span id="mCopies">0</span> نسخة</span>
+            <span id="mRating">⭐ 4.5</span>
+          </div>
+        </div>
+        <div class="m-code-wrap">
+          <pre><code class="language-lua" id="mCode">-- جاري التحميل...</code></pre>
+        </div>
+        <div class="m-actions">
+          <button class="btn-copy-big" id="modalCopyBtn">📋 نسخ الكود كاملاً</button>
+          <div class="rating-box">
+            <span style="font-size:0.8rem; font-weight:700; color:var(--c-text2)">قيم السكربت:</span>
+            <div class="rating-stars">
+              <span class="rstar" data-v="1">★</span>
+              <span class="rstar" data-v="2">★</span>
+              <span class="rstar" data-v="3">★</span>
+              <span class="rstar" data-v="4">★</span>
+              <span class="rstar" data-v="5">★</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="comments-wrap">
+        <div class="list-title" style="margin-bottom:20px">التعليقات (<span id="mCommentsCount">0</span>)</div>
+        <div class="comments-list" id="commentsList">
+          <!-- Dynamic -->
+        </div>
+        <div class="add-comment">
+          <div class="comment-inputs">
+            <input type="text" id="commentName" placeholder="اسمك (اختياري)">
+            <textarea id="commentText" placeholder="اكتب تعليقك هنا..."></textarea>
+            <button class="btn-send-comment" onclick="addComment()">إرسال التعليق</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="overlay" id="adminOverlay">
+  <div class="modal" style="max-width:550px;">
+    <div class="modal-head">
+      <div class="m-head-info">
+        <h2>لوحة التحكم</h2>
+        <p style="font-size:0.75rem; color:var(--c-text3)">إضافة وتعديل السكربتات</p>
+      </div>
+      <button class="btn-close" onclick="closeOverlay('adminOverlay')">✕</button>
+    </div>
+    <div class="modal-body">
+      
+      <div id="loginSection">
+        <div class="form-group">
+          <label>كلمة مرور الإدارة</label>
+          <input type="password" id="adminPass" placeholder="••••••••">
+          <button class="btn-admin save" style="margin-top:10px" onclick="checkAdmin()">دخول</button>
+        </div>
+      </div>
+
+      <div id="adminForm" style="display:none">
+        <div class="admin-grid">
+          <div class="form-group">
+            <label>اسم السكربت</label>
+            <input type="text" id="nName" placeholder="مثلاً: نظام طيران متطور">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label>التصنيف</label>
+              <select id="nCatSel">
+                <option value="">اختر موجود...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>أو تصنيف جديد</label>
+              <input type="text" id="nCatNew" placeholder="تصنيف جديد">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>وصف مختصر</label>
+            <input type="text" id="nDesc" placeholder="ماذا يفعل هذا السكربت؟">
+          </div>
+          <div class="form-group">
+            <label>الكود (Lua)</label>
+            <textarea id="nCode" placeholder="-- الصق الكود هنا..."></textarea>
+          </div>
+          <div class="admin-actions">
+            <button class="btn-admin save" onclick="saveNewScript()">🚀 نشر السكربت</button>
+            <button class="btn-admin cancel" onclick="closeOverlay('adminOverlay')">إلغاء</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<footer class="footer">
+  <p>© 2026 Studio Lite Scripts. مبرمج بكل حب لتطوير مجتمع Roblox العربي.</p>
+  <div class="footer-links">
+    <a href="#">الرئيسية</a>
+    <a href="#">سياسة الاستخدام</a>
+    <a href="#">تواصل معنا</a>
+  </div>
+</footer>
+
+<!-- Firebase Compat SDKs (أكثر استقراراً للجوال) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<script>
+/* ══════════════════════════════════
+   FIREBASE INITIALIZATION (SAFE)
+   ══════════════════════════════════ */
+const firebaseConfig = {
+  apiKey: "AIzaSyCViFGlAanlpehk--jhnDNI0HyqfUWx5Ls",
+  authDomain: "studiolite-scripts.firebaseapp.com",
+  projectId: "studiolite-scripts",
+  storageBucket: "studiolite-scripts.firebasestorage.app",
+  messagingSenderId: "118435376645",
+  appId: "1:118435376645:web:9d042fbfd5f7228544366c",
+  measurementId: "G-G7EYRCF60B"
+};
+
+// تشغيل Firebase بحذر
+let db = null;
+try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    console.log("Firebase Initialized Successfully");
+} catch (e) {
+    console.error("Firebase Init Failed:", e);
+}
+
+/* ══════════════════════════════════
+   LOGIC — Studio Lite Scripts
+   ══════════════════════════════════ */
+
+let scripts = [];
+let copies  = {};
+let ratings = {};
+let comments = {};
+let userRatings = {};
+let activeCat = 'الكل';
+let activeScript = null;
+let password = '';
+
+// تهيئة البيانات
+init();
+
+function init() {
+  const s = localStorage.getItem('sl2_scripts');
+  if (s) {
+    scripts = JSON.parse(s);
+    copies  = JSON.parse(localStorage.getItem('sl2_copies')  || '{}');
+    ratings = JSON.parse(localStorage.getItem('sl2_ratings') || '{}');
+    comments = JSON.parse(localStorage.getItem('sl2_comments')|| '{}');
+    userRatings = JSON.parse(localStorage.getItem('sl2_uratings')||'{}');
+    password = localStorage.getItem('sl2_pass') || '';
+  } else {
+    loadDefaults();
+  }
+  
+  // الاستماع للتحديثات السحابية إذا كان DB يعمل
+  if (db) {
+    db.collection("data").doc("appState").onSnapshot((docSnap) => {
+      if (docSnap.exists) {
+        const cloudData = docSnap.data();
+        scripts = cloudData.scripts || scripts;
+        copies = cloudData.copies || copies;
+        ratings = cloudData.ratings || ratings;
+        comments = cloudData.comments || comments;
+        userRatings = cloudData.userRatings || userRatings;
+        
+        // حفظ محلي وتحديث الواجهة
+        localStorage.setItem('sl2_scripts',  JSON.stringify(scripts));
+        localStorage.setItem('sl2_copies',   JSON.stringify(copies));
+        localStorage.setItem('sl2_ratings',  JSON.stringify(ratings));
+        localStorage.setItem('sl2_comments', JSON.stringify(comments));
+        localStorage.setItem('sl2_uratings', JSON.stringify(userRatings));
+        
+        renderCats();
+        renderScripts();
+      }
+    });
+  }
+
+  renderCats();
+  renderScripts();
+}
+
+function loadDefaults() {
+  scripts = [
+    {
+      id:'d1', name:'نظام الطيران الاحترافي (Fly)', cat:'حركة',
+      desc:'سكربت طيران سلس جداً مع تحكم كامل بالسرعة، يعمل على جميع الأجهزة.',
+      created: Date.now(),
+      code:`-- Fly Script Content`
+    }
+  ];
+  save();
+}
+
+function save() {
+  localStorage.setItem('sl2_scripts',  JSON.stringify(scripts));
+  localStorage.setItem('sl2_copies',   JSON.stringify(copies));
+  localStorage.setItem('sl2_ratings',  JSON.stringify(ratings));
+  localStorage.setItem('sl2_comments', JSON.stringify(comments));
+  localStorage.setItem('sl2_uratings', JSON.stringify(userRatings));
+  localStorage.setItem('sl2_pass', password);
+  
+  // مزامنة مع السحابة
+  if (db) {
+    db.collection("data").doc("appState").set({
+      scripts, copies, ratings, comments, userRatings,
+      lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(e => console.error("Cloud Sync Error:", e));
+  }
+}
+
+// ── THEME ──
+let isDark = true;
+document.getElementById('themeBtn').onclick = () => {
+  isDark = !isDark;
+  document.getElementById('themeBtn').textContent = isDark ? '🌙 ليلي' : '☀️ نهاري';
+};
+
+// ── STATS ──
+function updateStats() {
+  document.getElementById('statScripts').textContent = scripts.length;
+  document.getElementById('statCopies').textContent  = Object.values(copies).reduce((a,b)=>a+b,0);
+  document.getElementById('statCats').textContent    = new Set(scripts.map(s=>s.cat)).size;
+  const totalCom = Object.values(comments).reduce((a,b)=>a+(b||[]).length,0);
+  document.getElementById('statComments').textContent = totalCom;
+}
+
+// ── CATEGORIES ──
+function renderCats() {
+  const cats = ['الكل', ...new Set(scripts.map(s=>s.cat))];
+  const sec = document.getElementById('catsSection');
+  if(!sec) return;
+  sec.innerHTML = '';
+  cats.forEach(cat => {
+    const count = cat === 'الكل' ? scripts.length : scripts.filter(s=>s.cat===cat).length;
+    const btn = document.createElement('button');
+    btn.className = 'cat-pill' + (cat===activeCat?' active':'');
+    btn.innerHTML = `${cat} <span class="cat-count">${count}</span>`;
+    btn.onclick = () => { activeCat=cat; renderCats(); renderScripts(); };
+    sec.appendChild(btn);
+  });
+  const sel = document.getElementById('nCatSel');
+  if(sel) {
+      sel.innerHTML = '<option value="">اختر موجود...</option>';
+      cats.filter(c=>c!=='الكل').forEach(c=>{
+        const o = document.createElement('option');
+        o.value=c; o.textContent=c; sel.appendChild(o);
+      });
+  }
+}
+
+// ── SCRIPTS GRID ──
+function getStars(id) {
+  const r = ratings[id];
+  if (!r || !r.count) return null;
+  return (r.sum / r.count).toFixed(1);
+}
+
+function starsHtml(val) {
+  if (!val) return '<span style="color:var(--c-text3);font-size:0.75rem">لا يوجد تقييم</span>';
+  const n = parseFloat(val);
+  let h='';
+  for(let i=1;i<=5;i++) {
+    h+=`<span style="color:${i<=Math.round(n)?'var(--c-star)':'var(--c-text3)'}">★</span>`;
+  }
+  return `<span class="stars">${h}</span> <span class="rating-num">${val}</span>`;
+}
+
+function renderScripts() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  document.getElementById('searchBar').classList.toggle('has-value', !!q);
+  const sort = document.getElementById('sortSelect').value;
+
+  let list = scripts.filter(s => {
+    const matchCat = activeCat==='الكل' || s.cat===activeCat;
+    const matchQ = !q || s.name.toLowerCase().includes(q) || (s.desc||'').toLowerCase().includes(q) || s.cat.toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+
+  list.sort((a,b)=>{
+    if(sort==='newest')  return (b.created||0)-(a.created||0);
+    if(sort==='copies')  return (copies[b.id]||0)-(copies[a.id]||0);
+    if(sort==='rating')  return (parseFloat(getStars(b.id)||0))-(parseFloat(getStars(a.id)||0));
+    if(sort==='az')      return a.name.localeCompare(b.name,'ar');
+    return 0;
+  });
+
+  const grid = document.getElementById('scriptsGrid');
+  if(!grid) return;
+  grid.innerHTML = '';
+
+  document.getElementById('listMeta').textContent =
+    list.length===scripts.length ? `${scripts.length} سكربت` : `${list.length} من ${scripts.length}`;
+
+  if (list.length===0) {
+    grid.innerHTML=`<div class="empty-state"><div class="empty-icon">🔍</div><p>ما وجدنا نتائج. جرب كلمة أخرى</p></div>`;
+    return;
+  }
+
+  list.forEach((s,i) => {
+    const c = copies[s.id]||0;
+    const star = getStars(s.id);
+    const comCount = (comments[s.id]||[]).length;
+    const preview = s.code.split('\n').slice(0,5).join('\n');
+
+    const card = document.createElement('div');
+    card.className='s-card';
+    card.style.animationDelay=(i*0.04)+'s';
+    card.innerHTML=`
+      <div class="s-card-top">
+        <div class="s-card-row1">
+          <div class="s-card-name">${esc(s.name)}</div>
+          <div class="s-card-cat">${esc(s.cat)}</div>
+        </div>
+        <div class="s-card-desc">${esc(s.desc||'لا يوجد وصف')}</div>
+        <div class="s-card-rating" style="margin-top:8px">${starsHtml(star)}</div>
+      </div>
+      <div class="s-card-code">${esc(preview)}</div>
+      <div class="s-card-foot">
+        <div class="s-card-meta">
+          <div class="s-meta-item">📋 ${c}</div>
+          <div class="s-meta-item">💬 ${comCount}</div>
+        </div>
+        <button class="btn-copy-card" onclick="quickCopy(event,'${s.id}')">📋 نسخ</button>
+      </div>`;
+    card.addEventListener('click', e => {
+      if (!e.target.classList.contains('btn-copy-card')) openScript(s.id);
+    });
+    grid.appendChild(card);
+  });
+
+  updateStats();
+}
+
+function esc(s='') {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function clearSearch() {
+  document.getElementById('searchInput').value='';
+  renderScripts();
+}
+
+// ── COPY ──
+function doCopy(text, id) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).catch(()=>fbCopy(text));
+  } else fbCopy(text);
+  if (id) {
+    copies[id] = (copies[id]||0)+1;
+    save();
+    renderScripts();
+  }
+}
+function fbCopy(t) {
+  const el=document.createElement('textarea');
+  el.value=t; el.style.cssText='position:fixed;opacity:0';
+  document.body.appendChild(el); el.select();
+  document.execCommand('copy'); document.body.removeChild(el);
+}
+function quickCopy(e, id) {
+  e.stopPropagation();
+  const s = scripts.find(x=>x.id===id); if(!s) return;
+  doCopy(s.code, id);
+  toast('✅ تم نسخ: '+s.name,'success');
+  const btn = e.currentTarget;
+  btn.textContent='✅ تم'; btn.classList.add('done');
+  setTimeout(()=>{ btn.textContent='📋 نسخ'; btn.classList.remove('done'); },2000);
+}
+
+// ── TOAST ──
+function toast(msg, type='success') {
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent=msg; t.className='toast '+type+' show';
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+// ── VIEW MODAL ──
+function openScript(id) {
+  activeScript = scripts.find(s=>s.id===id); if(!activeScript) return;
+  const s = activeScript;
+  document.getElementById('mTitle').textContent = s.name;
+  document.getElementById('mCat').textContent   = s.cat;
+  document.getElementById('mDesc').textContent  = s.desc||'';
+  document.getElementById('mCopies').textContent = copies[s.id]||0;
+  const star = getStars(s.id);
+  document.getElementById('mRating').textContent = star ? '⭐ '+star : '—';
+  const codeEl = document.getElementById('mCode');
+  codeEl.textContent = s.code;
+  hljs.highlightElement(codeEl);
+  const myRating = userRatings[s.id]||0;
+  document.querySelectorAll('.rstar').forEach(el=>{
+    el.classList.toggle('active', parseInt(el.dataset.v)<=myRating);
+    el.onclick = () => rateScript(s.id, parseInt(el.dataset.v));
+  });
+  renderComments(s.id);
+  openOverlay('viewOverlay');
+}
+
+document.getElementById('modalCopyBtn').onclick = () => {
+  if (!activeScript) return;
+  doCopy(activeScript.code, activeScript.id);
+  toast('✅ تم نسخ الكود!','success');
+};
+
+// ── RATING ──
+function rateScript(id, val) {
+  if (!ratings[id]) ratings[id] = {sum:0,count:0};
+  ratings[id].sum+=val; ratings[id].count++;
+  userRatings[id]=val;
+  save();
+  toast('⭐ شكراً لتقييمك!','success');
+  openScript(id);
+  renderScripts();
+}
+
+// ── COMMENTS ──
+function renderComments(id) {
+  const list = document.getElementById('commentsList');
+  const coms = comments[id]||[];
+  if (coms.length===0) {
+    list.innerHTML='<div class="no-comments">لا يوجد تعليقات بعد.</div>';
+    return;
+  }
+  list.innerHTML='';
+  [...coms].reverse().forEach(c=>{
+    const d=document.createElement('div');
+    d.className='comment-item';
+    d.innerHTML=`<div class="comment-name">${esc(c.name)}</div><div class="comment-text">${esc(c.text)}</div>`;
+    list.appendChild(d);
+  });
+}
+
+function addComment() {
+  if (!activeScript) return;
+  const text = document.getElementById('commentText').value.trim();
+  if (!text) return;
+  const name = document.getElementById('commentName').value.trim()||'مجهول';
+  if (!comments[activeScript.id]) comments[activeScript.id]=[];
+  comments[activeScript.id].push({ name, text, time: new Date().toLocaleDateString() });
+  save();
+  document.getElementById('commentText').value='';
+  renderComments(activeScript.id);
+}
+
+// ── OVERLAYS ──
+function openOverlay(id)  { document.getElementById(id).classList.add('open'); }
+function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.overlay').forEach(o=>{
+  o.addEventListener('click', e => { if(e.target===o) closeOverlay(o.id); });
+});
+
+// ── ADMIN ──
+function openAdmin() { openOverlay('adminOverlay'); }
+function checkAdmin() {
+  const p = document.getElementById('adminPass').value;
+  if (p === '1234') {
+    document.getElementById('loginSection').style.display='none';
+    document.getElementById('adminForm').style.display='block';
+  } else toast('خطأ!','error');
+}
+
+function saveNewScript() {
+  const name = document.getElementById('nName').value;
+  const cat  = document.getElementById('nCatNew').value || document.getElementById('nCatSel').value;
+  const code = document.getElementById('nCode').value;
+  if(!name || !cat || !code) return;
+  scripts.unshift({ id: 's'+Date.now(), name, cat, code, desc: document.getElementById('nDesc').value, created: Date.now() });
+  save();
+  closeOverlay('adminOverlay');
+  renderCats();
+  renderScripts();
+}
+</script>
+</body>
+</html>
